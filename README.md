@@ -233,6 +233,11 @@ The first time you use the app, the password is generated using a hash displayed
 
 Source link docker-compose.yml: https://raw.githubusercontent.com/SpecterOps/bloodhound/main/examples/docker-compose/docker-compose.yml
 
+bloodhound-python
+```
+bloodhound-python -d redscan.local -u user -p 'password' -ns 192.168.56.200 -c all
+```
+
 
 ## Vulnerabilidade SPN (Service Principal Names)
 - Exploit 1:
