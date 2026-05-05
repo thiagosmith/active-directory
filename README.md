@@ -123,9 +123,116 @@ start
 ```
 
 ## Internal Enumeration
+
+NetExec
 ```
 nxc smb 192.168.56.0/24
 ```
+
+Enum4Linux
+```
+enum4linux -a 192.168.56.200
+```
+
+Enum4Linux Autenticado
+```
+enum4linux -u user -p password 192.168.56.200
+```
+
+RPCClient
+```
+rpcclient -W redscan.local -U user 192.168.56.200
+```
+```
+enumdomusers
+```
+```
+enumdomgroups
+```
+```
+querygroupmem 0x200
+```
+```
+queryuser 0x1f4
+```
+```
+queryuser 0x46a
+```
+
+PowerView
+
+Download
+```
+wget https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/refs/heads/master/Recon/PowerView.ps1
+```
+```
+powershell -ep bypass
+cd .\Downloads\
+. .\PowerView.ps1
+Get-Netuser
+Get-Netuser | select cn
+Get-DomainGroup -name *admin*
+Get-DomainGroup -name *admin* | select cn
+Get-DomainGroup -name "Domain Admins"
+Get-DomainGroup -name "Domain Admins" | select member
+Get-DomainGroup -name "Domain Admins" | findstr member
+```
+
+https://github.com/smithbraz/windows/blob/main/powershell-basic/README.md
+
+Baixando o SharpHound:
+```
+wget https://raw.githubusercontent.com/BloodHoundAD/BloodHound/refs/heads/master/Collectors/SharpHound.ps1
+```` 
+
+Executando o SharpHound:
+```
+powershell -ep bypass
+```
+```
+. .\SharpHound.ps1
+```
+```
+Invoke-BloodHound -CollectionMethods All -Domain thm.local -ZipFilename thm.zip
+```
+
+
+### bloodhound
+Install and start a BloodHound CE with docker
+
+Install Docker and Docker Compose
+```
+sudo apt install docker.io docker-compose -y
+```
+
+Start Docker Service
+```
+sudo service docker start
+```
+
+Create and access the directory for download compose file
+```
+mkdir bloodhound
+```
+```
+cd bloodhound
+```
+
+Download Compose file
+```
+wget https://raw.githubusercontent.com/thiagosmith/bloodhound/refs/heads/main/docker-compose.yml
+```
+
+### Up BloodHound
+```
+sudo docker-compose up
+```
+
+## Note: 
+The first time you use the app, the password is generated using a hash displayed on the terminal. Copy the hash to log in for the first time using the admin user. After logging in, change the password to a strong one.
+
+Source link docker-compose.yml: https://raw.githubusercontent.com/SpecterOps/bloodhound/main/examples/docker-compose/docker-compose.yml
+
 
 ## Vulnerabilidade SPN (Service Principal Names)
 - Exploit 1:
